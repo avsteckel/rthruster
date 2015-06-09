@@ -15,9 +15,11 @@ def getMdot(r,mdot,RPM):
     vp1_theta=[]
     vp1_z=[]
     tvec=[]
+    P=[]  # array to 
     thrust=float(0)
     # Assume an equal distribution of particles along the radius
     rad = np.linspace(0,float(r)/100,num = res)
+    massflow=mdot*
     for x in range(0,res):
         vb=RPM*(2*pi/60)*float(rad[x])  # convert rotational vel to linear
         vp1_theta.append(-sin(90-2*phi1)*vb)
