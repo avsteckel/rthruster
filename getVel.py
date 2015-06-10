@@ -15,11 +15,11 @@ def getMdot(r,mdot,RPM):
     vp1_theta=[]
     vp1_z=[]
     tvec=[]
-    P=[]  # array to 
+    P=[]  # array to
     thrust=float(0)
     # Assume an equal distribution of particles along the radius
     rad = np.linspace(0,float(r)/100,num = res)
-    massflow=mdot*
+    massflow=mdot
     for x in range(0,res):
         vb=RPM*(2*pi/60)*float(rad[x])  # convert rotational vel to linear
         vp1_theta.append(-sin(90-2*phi1)*vb)
@@ -30,13 +30,21 @@ def getMdot(r,mdot,RPM):
     rmax=Decimal(r).quantize(Decimal('.1'))
     zvel=Decimal(vp1_z[res-1]).quantize(Decimal('.1'))
     return [thrustr,zvel,rmax]
-
     #print ("Vertical Velocity: ", vp1_z[3])
+
+def getPWR(mdot,zvel):
+    vel=float(zvel)
+    power=float(mdot)*(vel*vel)/1000
+    pwr=Decimal(power).quantize(Decimal('.1'))
+    #print("Power: ",power)
+    return pwr
+
 
 root = Tkinter.Tk()
 var1 = StringVar()
 var2 = StringVar()
 var3 = StringVar()
+var4 = StringVar()
 # Enter the radius
 Tkinter.Label(root, text="radius",borderwidth=1 ).grid(row=0,column=0)
 r=Entry(root, bd =5)
@@ -59,18 +67,25 @@ Tkinter.Label(root, text="RPM",borderwidth=1 ).grid(row=2,column=2)
 Tkinter.Label(root, text="Thrust").grid(row=4,column=0)
 Tkinter.Label(root, text="N",borderwidth=1).grid(row=4,column=2)
 
-Tkinter.Label(root, text="Z velocity ",borderwidth=1).grid(row=5,column=0)
+Tkinter.Label(root, text="Z velocity",borderwidth=1).grid(row=5,column=0)
 Tkinter.Label(root, text="m/s at r=",borderwidth=1).grid(row=5,column=2)
 Tkinter.Label(root, text="cm",borderwidth=1).grid(row=5,column=4)
 
+Tkinter.Label(root, text="Power",borderwidth=1).grid(row=6,column=0)
+Tkinter.Label(root, text="kW",borderwidth=1).grid(row=6,column=2)
+
+# Update GUI
 def CallBack():
     [thrust,zvel,rmax]=getMdot(float(r.get()),float(mdot.get()),float(RPM.get()))
+    pwr=getPWR(float(mdot.get()),zvel)
     var1.set(thrust)
     var2.set(zvel)
     var3.set(rmax)
+    var4.set(pwr)
     Tkinter.Label = Message( root, textvariable=var1,width=50).grid(row=4,column=1)
     Tkinter.Label = Message( root, textvariable=var2,width=50).grid(row=5,column=1)
     Tkinter.Label = Message( root, textvariable=var3,width=50).grid(row=5,column=3)
+    Tkinter.Label = Message( root, textvariable=var4,width=50).grid(row=6,column=1)
     #tkMessageBox.showinfo( "Hello Python", "Hello World")
 
 B = Button(root, text ="Compute", command = CallBack).grid(row=7,column=1)
